@@ -79,6 +79,9 @@ func SetupPersistence() error {
 	}
 
 	_db = db
+
+	createAccessTokensTable()
+
 	return nil
 }
 

@@ -97,6 +97,15 @@ func Start() error {
 	// Update chat message visibilty
 	http.HandleFunc("/api/admin/chat/updatemessagevisibility", middleware.RequireAdminAuth(admin.UpdateMessageVisibility))
 
+	// Get all access tokens
+	http.HandleFunc("/api/admin/accesstokens", middleware.RequireAdminAuth(admin.GetAccessTokens))
+
+	// Delete a single access token
+	http.HandleFunc("/api/admin/deleteaccesstoken", middleware.RequireAdminAuth(admin.DeleteAccessToken))
+
+	// Create a single access token
+	http.HandleFunc("/api/admin/createaccesstoken", middleware.RequireAdminAuth(admin.CreateAccessToken))
+
 	port := config.Config.GetPublicWebServerPort()
 
 	log.Tracef("Web server running on port: %d", port)
