@@ -8,7 +8,7 @@ import (
 	"github.com/owncast/owncast/router/middleware"
 )
 
-// GetStatus gets the status of the server.
+// GetStatus 获取服务器的状态
 func GetStatus(w http.ResponseWriter, r *http.Request) {
 	middleware.EnableCors(&w)
 

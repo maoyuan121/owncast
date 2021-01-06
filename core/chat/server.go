@@ -21,30 +21,30 @@ var l = sync.Mutex{}
 
 // Server represents the server which handles the chat.
 type server struct {
-	Clients map[string]*Client
+	Clients map[string]*Client  // 连接到的客户端集合
 
 	pattern  string
 	listener models.ChatListener
 
-	addCh     chan *Client
-	delCh     chan *Client
+	addCh     chan *Client // 添加客户端的通道
+	delCh     chan *Client // 删除客户端的通道
 	sendAllCh chan models.ChatEvent
 	pingCh    chan models.PingMessage
 	doneCh    chan bool
 	errCh     chan error
 }
 
-// Add adds a client to the server.
+// 添加一个 client
 func (s *server) add(c *Client) {
 	s.addCh <- c
 }
 
-// Remove removes a client from the server.
+// 删除一个 client
 func (s *server) remove(c *Client) {
 	s.delCh <- c
 }
 
-// SendToAll sends a message to all of the connected clients.
+// SendToAll 发送一个消息给所有的客户端
 func (s *server) SendToAll(msg models.ChatEvent) {
 	s.sendAllCh <- msg
 }

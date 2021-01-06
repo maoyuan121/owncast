@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// How often we poll for updates.
+// 多久更新一次指标度量
 const metricsPollingInterval = 1 * time.Minute
 
 // CollectedMetrics stores different collected + timestamped values.
@@ -19,7 +19,7 @@ type CollectedMetrics struct {
 // Metrics is the shared Metrics instance.
 var Metrics *CollectedMetrics
 
-// Start will begin the metrics collection and alerting.
+// Start 将开始收集度量指标，并根据情况选择报警
 func Start() {
 	Metrics = new(CollectedMetrics)
 	go startViewerCollectionMetrics()
@@ -31,11 +31,11 @@ func Start() {
 }
 
 func handlePolling() {
-	// Collect hardware stats
+	// 收集硬件状态
 	collectCPUUtilization()
 	collectRAMUtilization()
 	collectDiskUtilization()
 
-	// Alerting
+	// 报警
 	handleAlerting()
 }

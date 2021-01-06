@@ -45,13 +45,19 @@
   </a>
 </p>
 
-In 2020 the world changed when everyone become stuck in their homes, looking for creative outlets to share their art, skills and themselves from inside their bedroom.
+2020年，当每个人都被困在家里时，世界发生了变化，
+人们在他们的卧室里寻找创造性的出口来分享他们的艺术、技能和他们自己。
 
-This created an explosion of live streaming on Facebook Live, YouTube Live, Instagram, and Twitch.  These services provided everything they needed, an easy way to live stream to the world, and a chat for users to be a part of their community.
+这种情况使得 Facebook live，YouTube Live Instagram 还有 Twitch 上造成了直播的爆炸式增长，
+这些服务提供了他们需要的一切，一种向世界直播的简单方法，让用户成为他们社区的一部分。
 
-That's when I wanted a better option for people. Something you could run yourself and get all the functionality of these services, where you could live stream to an audience and and allow them to take part in the chat, just like they've been used to on all the other services. **There should be a independent, standalone _Twitch in a Box_.**
+那时我想为人们提供更好的选择。你可以自己运行，获得这些服务的所有功能，你可以对观众进行直播，让他们参与到聊天中来，就像他们在其他服务上习惯的那样。
+ **There should be a independent, standalone _Twitch in a Box_.**
 
-**Keep in mind that while streaming to the big social companies is always free, you pay for it with your identity and your data, as well as the identity and data of every person that tunes in.  When you self-host anything you'll have to pay with your money instead.  But running a self-hosted live stream server can be done for as cheap as $5/mo, and that's a much better deal than selling your soul to Facebook, Google or Amazon.**
+ 
+**记住，虽然大型社交公司提供的流媒体服务永远是免费的，你用你的身份和数据，以及每个收听的人的身份和数据来支付。
+当你自己举办任何活动时，你就得自己掏钱了。但是，运行一个自托管的流媒体服务器只需每月 5 美元，
+这比把你的灵魂卖给 Facebook、谷歌或亚马逊要好得多。**
 
 ---
 
@@ -59,53 +65,61 @@ That's when I wanted a better option for people. Something you could run yoursel
 
 ## Getting Started
 
-The goal is to have a single service that you can run and it works out of the box. **Visit the [Quickstart](https://owncast.online/docs/quickstart/) to get up and running.**
+我们的目标是拥有一个可以运行并开箱即用的服务。
+ 
+**Visit the [Quickstart](https://owncast.online/docs/quickstart/) to get up and running.**
 
 ## Configuration
 
-Many aspects can be adjusted and customized to your preferences.  [Read more about Configuration](https://owncast.online/docs/configuration/) to update the web UI, video settings, and more.
+许多方面都可以根据您的喜好进行调整和定制。
+[查看 Configuration](https://owncast.online/docs/configuration/) 更新web界面，视频设置等等。
 
 ## Web interface + chat
 
-Owncast includes a web interface to your video with built-in chat that is available once you start the server.
+Owncast 包括一个内置聊天的视频 web 界面，一旦你启动服务器就可以使用。
 
-The web interface was specifically built to be editable by anybody comfortable tweaking a web page.  It's not bundled or transpiled into anything, it's just HTML + Javascript + CSS that you can start editing.
+web 界面是专门为任何喜欢调整 web 页面的人而设计的。它没有捆绑或编译成任何东西，它只是 HTML + Javascript + CSS，你可以开始编辑。
 
-Read more about the features provided and how to configure them in the [web documentation](https://owncast.online/docs/website/).
+请阅读 [web 文档](https://owncast.online/docs/website/) 中提供的特性和如何配置它们的更多信息。
+
 
 ## Use with your existing broadcasting software
 
-In general Owncast is compatible with any software that uses `RTMP` to broadcast to a remote server. `RTMP` is what all the major live streaming services use, so if you’re currently using one of those it’s likely that you can point your existing software at your Owncast instance instead.
+一般来说，Owncast 兼容任何使用 “RTMP” 向远程服务器广播的软件。“RTMP” 是所有主要的流媒体服务使用的，
+所以如果你目前正在使用其中的一个，你很可能可以将你现有的软件指向你自己的 cast 实例。
 
-OBS, Streamlabs, Restream and many others have been used with Owncast.  [Read more about compatibility with existing software](https://owncast.online/docs/broadcasting/).
+OBS、Streamlabs、Restream 和其他许多工具都能与 Owncast 一起使用。[阅读更多关于与现有软件的兼容性](https://owncast.online/docs/broadcasting/)。
+
 
 ## Video storage options
 
-Two ways of storing and distributing the video are supported.
+支持两种存储和分发视频的方式。
 
-1. Locally via the Owncast server.
+1. 通过 Owncast 服务器存储在本地。
 2. [S3-compatible storage](https://owncast.online/docs/s3/).
 
 ### Local file distribution
 
-This is the simplest and works out of the box.  In this scenario video will be served to the public from the computer that is running the server.  If you have a fast internet connection, enough bandwidth alotted to you, and a small audience this may be fine for many people.
+这是最简单的，可以开箱即用。在这个场景中，视频将从运行服务器的计算机向公众提供。
+如果你有一个快速的互联网连接，足够的带宽给你，和较少的观众，这可能对许多人来说是好的。
 
 ### S3-Compatible Storage
 
-Instead of serving video directly from your personal server you can use a S3 compatible storage provider to offload the bandwidth and storage requirements elsewhere.
+与其直接从您的个人服务器上提供视频，您可以使用 S3 兼容存储提供商来减轻其他地方的带宽和存储需求。
 
-Read [more detailed documentation about configuration of S3-compatible services](https://owncast.online/docs/s3/).
+阅读 [more detailed documentation about configuration of S3-compatible services](https://owncast.online/docs/s3/).
 
 
 ## Building from Source
 
-1. Ensure you have the gcc compiler configured.
-1. Install the [Go toolchain](https://golang.org/dl/).
-1. Clone the repo.  `git clone https://github.com/owncast/owncast`
-1. `go run main.go pkged.go` will run from source.
-1. Point your [broadcasting software](https://owncast.online/docs/broadcasting/) at your new server and start streaming.
+1. 确保你正确配置了 gcc complier 
+1. 安装 [Go toolchain](https://golang.org/dl/)
+1. 克隆仓储  `git clone https://github.com/owncast/owncast`
+1. 从源代码的根目录运行 `go run main.go pkged.go` ，这个 pkged.go 用于将静态文件打包到 Go 的二进制文件
+1. 在您的新服务器上指出你的[广播软件](https://owncast.online/docs/broadcasting/)，并开始流媒体。
 
-There is also a supplied `Dockerfile` so you can spin it up from source with little effort.  [Read more about running from source](https://owncast.online/docs/building/).
+这里还提供了一个 `Dockerfile`，所以你可以用很少的努力从源代码启动它。[阅读更多关于从源代码运行](https://owncast.online/docs/building/)。
+
 
 <!-- LICENSE -->
 ## License

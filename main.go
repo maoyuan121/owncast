@@ -61,6 +61,7 @@ func main() {
 		config.Config.DatabaseFilePath = config.Config.GetDataFilePath()
 	}
 
+	// 开始度量标准收集和警报
 	go metrics.Start()
 
 	err := data.SetupPersistence()

@@ -111,7 +111,11 @@ func RenderSimpleMarkdown(raw string) string {
 	return buf.String()
 }
 
-// GetCacheDurationSecondsForPath will return the number of seconds to cache an item.
+// GetCacheDurationSecondsForPath 返回该缓存指定的文件多久
+// 如果文件时 thumbnail.jpg 缓存 20s
+// .js .css 缓存 60s
+// .ts 文件缓存 31557600s
+// .m3u8 文件不缓存
 func GetCacheDurationSecondsForPath(filePath string) int {
 	if path.Base(filePath) == "thumbnail.jpg" {
 		// Thumbnails re-generate during live

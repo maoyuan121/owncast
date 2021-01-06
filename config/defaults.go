@@ -1,5 +1,6 @@
 package config
 
+// 获取默认配置
 func getDefaults() config {
 	defaults := config{}
 	defaults.WebServerPort = 8080

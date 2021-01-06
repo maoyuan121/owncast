@@ -31,7 +31,8 @@ type config struct {
 	YP                   YP              `yaml:"yp"`
 }
 
-// InstanceDetails defines the user-visible information about this particular instance.
+// InstanceDetails 定义关于这个应用实例用户可见的信息
+// 如：应用名，标题，Logo 等
 type InstanceDetails struct {
 	Name    string `yaml:"name" json:"name"`
 	Title   string `yaml:"title" json:"title"`
@@ -55,6 +56,7 @@ type socialHandle struct {
 	URL      string `yaml:"url" json:"url"`
 }
 
+// 视频相关的设置
 type videoSettings struct {
 	ChunkLengthInSeconds      int             `yaml:"chunkLengthInSeconds"`
 	StreamingKey              string          `yaml:"streamingKey"`
@@ -62,7 +64,7 @@ type videoSettings struct {
 	HighestQualityStreamIndex int             `yaml:"-"`
 }
 
-// YP allows registration to the central Owncast YP (Yellow pages) service operating as a directory.
+// YP 允许注册到中央的黄页（黄页）服务作为一个目录运行。
 type YP struct {
 	Enabled      bool   `yaml:"enabled" json:"enabled"`
 	InstanceURL  string `yaml:"instanceURL" json:"instanceUrl"` // The public URL the directory should link to
@@ -105,6 +107,7 @@ type S3 struct {
 	ACL             string `yaml:"acl" json:"acl,omitempty"`
 }
 
+// 从指定路径的文件加载配置信息
 func (c *config) load(filePath string) error {
 	if !utils.DoesFileExists(filePath) {
 		log.Fatal("ERROR: valid config.yaml is required.  Copy config-default.yaml to config.yaml and edit")
@@ -133,6 +136,7 @@ func (c *config) load(filePath string) error {
 	return nil
 }
 
+// 验证配置
 func (c *config) verifySettings() error {
 	if c.VideoSettings.StreamingKey == "" {
 		return errors.New("No stream key set. Please set one in your config file.")
@@ -281,7 +285,8 @@ func (q *StreamQuality) GetIsAudioPassthrough() bool {
 	return false
 }
 
-// Load tries to load the configuration file.
+// 从指定路径的文件加载配置
+// 并实例化一个默认配置
 func Load(filePath string, versionInfo string, versionNumber string) error {
 	Config = new(config)
 	_default = getDefaults()

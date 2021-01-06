@@ -10,7 +10,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// GenerateClientIDFromRequest generates a client id from the provided request.
+// GenerateClientIDFromRequest 根据 Http 请求 生成一个 client id
+// 这个 client id 由 ip 地址加 useragent md5 加密生成
 func GenerateClientIDFromRequest(req *http.Request) string {
 	ipAddress := GetIPAddressFromRequest(req)
 	ipAddressComponents := strings.Split(ipAddress, ":")
@@ -22,15 +23,15 @@ func GenerateClientIDFromRequest(req *http.Request) string {
 	return hex.EncodeToString(b[:])
 }
 
-// GetIPAddressFromRequest returns the IP address from a http request.
+// GetIPAddressFromRequest 从 Http 请求中返回 IP 地址
+// 如果请求头设置了 X-FORWARDED-FOR 的话，从其中取值作为 IP 地址
 func GetIPAddressFromRequest(req *http.Request) string {
-	ipAddressString := req.RemoteAddr
 	xForwardedFor := req.Header.Get("X-FORWARDED-FOR")
 	if xForwardedFor != "" {
 		return xForwardedFor
 	}
 
-	ip, _, err := net.SplitHostPort(ipAddressString)
+	ip, _, err := net.SplitHostPort(req.RemoteAddr)
 	if err != nil {
 		log.Errorln(err)
 		return ""
