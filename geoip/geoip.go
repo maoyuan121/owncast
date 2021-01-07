@@ -17,9 +17,9 @@ var _enabled = true // Try to use GeoIP support it by default.
 
 // GeoDetails stores details about a location.
 type GeoDetails struct {
-	CountryCode string `json:"countryCode"`
-	RegionName  string `json:"regionName"`
-	TimeZone    string `json:"timeZone"`
+	CountryCode string `json:"countryCode"` // 国家代码
+	RegionName  string `json:"regionName"`  // 区域
+	TimeZone    string `json:"timeZone"`    // 时区
 }
 
 // GetGeoFromIP returns geo details associated with an IP address if we

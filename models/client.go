@@ -13,14 +13,14 @@ type ConnectedClientsResponse struct {
 }
 
 type Client struct {
-	ConnectedAt  time.Time         `json:"connectedAt"`
-	LastSeen     time.Time         `json:"-"`
-	MessageCount int               `json:"messageCount"`
-	UserAgent    string            `json:"userAgent"`
-	IPAddress    string            `json:"ipAddress"`
-	Username     *string           `json:"username"`
-	ClientID     string            `json:"clientID"`
-	Geo          *geoip.GeoDetails `json:"geo"`
+	ConnectedAt  time.Time         `json:"connectedAt"`  // 连接时间
+	LastSeen     time.Time         `json:"-"`            // 最后一次连接时间？？？
+	MessageCount int               `json:"messageCount"` // 消息数
+	UserAgent    string            `json:"userAgent"`    // 浏览器 useragent
+	IPAddress    string            `json:"ipAddress"`    // ip 地址
+	Username     *string           `json:"username"`     // 用户名
+	ClientID     string            `json:"clientID"`     // client  id
+	Geo          *geoip.GeoDetails `json:"geo"`          // geo 信息
 }
 
 func GenerateClientFromRequest(req *http.Request) Client {

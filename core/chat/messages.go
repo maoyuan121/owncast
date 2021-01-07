@@ -4,6 +4,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// 设置指定消息的可见性
 func SetMessagesVisibility(messageIDs []string, visibility bool) error {
 	// Save new message visibility
 	if err := saveMessageVisibility(messageIDs, visibility); err != nil {

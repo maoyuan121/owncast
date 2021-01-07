@@ -21,25 +21,25 @@ var l = sync.Mutex{}
 
 // Server represents the server which handles the chat.
 type server struct {
-	Clients map[string]*Client  // 连接到的客户端集合
+	Clients map[string]*Client // 连接到的客户端集合
 
-	pattern  string
-	listener models.ChatListener
+	pattern  string              // url pattern
+	listener models.ChatListener // 聊天服务器的侦听器
 
-	addCh     chan *Client // 添加客户端的通道
-	delCh     chan *Client // 删除客户端的通道
-	sendAllCh chan models.ChatEvent
-	pingCh    chan models.PingMessage
-	doneCh    chan bool
-	errCh     chan error
+	addCh     chan *Client            // 添加客户端的通道
+	delCh     chan *Client            // 删除客户端的通道
+	sendAllCh chan models.ChatEvent   // 发送消息的通道
+	pingCh    chan models.PingMessage // ping 通道
+	doneCh    chan bool               //
+	errCh     chan error              // 错误通道
 }
 
-// 添加一个 client
+// 写 add client 通道
 func (s *server) add(c *Client) {
 	s.addCh <- c
 }
 
-// 删除一个 client
+// 写 del client 通道
 func (s *server) remove(c *Client) {
 	s.delCh <- c
 }
@@ -49,17 +49,19 @@ func (s *server) SendToAll(msg models.ChatEvent) {
 	s.sendAllCh <- msg
 }
 
-// Err handles an error.
+// 写 err 通道
 func (s *server) err(err error) {
 	s.errCh <- err
 }
 
+// 发送消息给所有 client
 func (s *server) sendAll(msg models.ChatEvent) {
 	for _, c := range s.Clients {
 		c.write(msg)
 	}
 }
 
+// 写所有 client 的 ping 通道
 func (s *server) ping() {
 	ping := models.PingMessage{MessageType: PING}
 	for _, c := range s.Clients {
@@ -67,12 +69,16 @@ func (s *server) ping() {
 	}
 }
 
+// 写所有 client 的 usernameChange 通道
 func (s *server) usernameChanged(msg models.NameChangeEvent) {
 	for _, c := range s.Clients {
 		c.usernameChangeChannel <- msg
 	}
 }
 
+// 建立连接
+// 创建一个 client 并添加到 server 的 add client 通道
+// client 开始侦听
 func (s *server) onConnection(ws *websocket.Conn) {
 	client := NewClient(ws)
 
@@ -88,8 +94,8 @@ func (s *server) onConnection(ws *websocket.Conn) {
 	client.listen()
 }
 
-// Listen and serve.
-// It serves client connection and broadcast request.
+// 侦听
+// 处理 client 连接和广播请求
 func (s *server) Listen() {
 	http.Handle(s.pattern, websocket.Handler(s.onConnection))
 
@@ -97,7 +103,10 @@ func (s *server) Listen() {
 
 	for {
 		select {
-		// add new a client
+		// 从 add client 通道读
+		// 添加到 server 的 client 集合
+		// 发送欢迎消息给这个 client
+		//
 		case c := <-s.addCh:
 			l.Lock()
 			s.Clients[c.socketID] = c
@@ -106,9 +115,10 @@ func (s *server) Listen() {
 			s.listener.ClientAdded(c.GetViewerClientFromChatClient())
 			s.sendWelcomeMessageToClient(c)
 
-		// remove a client
+		// 从 del client 通道读
 		case c := <-s.delCh:
 			s.removeClient(c)
+			// 从发送消息通道读
 		case msg := <-s.sendAllCh:
 			// message was received from a client and should be sanitized, validated
 			// and distributed to other clients.
@@ -120,11 +130,12 @@ func (s *server) Listen() {
 			s.listener.MessageSent(msg)
 			s.sendAll(msg)
 
-			// Store in the message history
+			// 将消息保存到数据库中
 			addMessage(msg)
+			// 从 ping 通道读
 		case ping := <-s.pingCh:
 			fmt.Println("PING?", ping)
-
+			// 从 err 通道读
 		case err := <-s.errCh:
 			log.Error("Error:", err.Error())
 
@@ -134,6 +145,9 @@ func (s *server) Listen() {
 	}
 }
 
+// 删除一个 client
+// 从 client 集合中删除这个 client
+//
 func (s *server) removeClient(c *Client) {
 	l.Lock()
 
@@ -147,6 +161,8 @@ func (s *server) removeClient(c *Client) {
 	l.Unlock()
 }
 
+// 发送欢迎消息给 client
+// client 刚连接上来的时候发送
 func (s *server) sendWelcomeMessageToClient(c *Client) {
 	go func() {
 		// Add an artificial delay so people notice this message come in.

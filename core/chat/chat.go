@@ -7,7 +7,9 @@ import (
 	"github.com/owncast/owncast/models"
 )
 
-// Setup sets up the chat server.
+// 设置好一个 chat server
+// 1. 设置好数据库
+// 2. 实例化一个 server 到 _server
 func Setup(listener models.ChatListener) {
 	setupPersistence()
 
@@ -32,7 +34,9 @@ func Setup(listener models.ChatListener) {
 	}
 }
 
-// Start starts the chat server.
+// 开始运行 chat server
+// 1. server 开始监听
+// 2. server 开始 ping
 func Start() error {
 	if _server == nil {
 		return errors.New("chat server is nil")
@@ -50,7 +54,7 @@ func Start() error {
 	return errors.New("chat server failed to start")
 }
 
-// SendMessage sends a message to all.
+// 发送消息给所有 client
 func SendMessage(message models.ChatEvent) {
 	if _server == nil {
 		return
@@ -59,7 +63,7 @@ func SendMessage(message models.ChatEvent) {
 	_server.SendToAll(message)
 }
 
-// GetMessages gets all of the messages.
+// 获取历史消息（一天内）
 func GetMessages(filtered bool) []models.ChatEvent {
 	if _server == nil {
 		return []models.ChatEvent{}
@@ -68,6 +72,7 @@ func GetMessages(filtered bool) []models.ChatEvent {
 	return getChatHistory(filtered)
 }
 
+// 根据 clientid 获取 client
 func GetClient(clientID string) *Client {
 	for _, client := range _server.Clients {
 		if client.ClientID == clientID {

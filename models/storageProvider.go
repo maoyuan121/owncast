@@ -1,6 +1,7 @@
 package models
 
-// StorageProvider is how a chunk storage provider should be implemented.
+// StorageProvider 是块存储提供程序应该如何实现的接口。
+// 目前有本地和 S3 两种存储方式
 type StorageProvider interface {
 	Setup() error
 	Save(filePath string, retryCount int) (string, error)

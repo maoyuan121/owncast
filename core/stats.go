@@ -19,6 +19,8 @@ import (
 
 var l = sync.Mutex{}
 
+// 设置统计
+// 每一分钟将统计信息保存到文件
 func setupStats() error {
 	s, err := getSavedStats()
 	if err != nil {
@@ -81,7 +83,7 @@ func SetClientActive(client models.Client) {
 	}
 }
 
-// RemoveClient removes a client from the active clients record.
+// 从统计信息的 client 集合中删除指定的 client
 func RemoveClient(clientID string) {
 	log.Trace("Removing the client:", clientID)
 
@@ -103,6 +105,7 @@ func GetClients() []models.Client {
 	return clients
 }
 
+// 将统计信息保存到文件
 func saveStatsToFile() error {
 	jsonData, err := json.Marshal(_stats)
 	if err != nil {

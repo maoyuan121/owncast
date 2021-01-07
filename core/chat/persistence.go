@@ -18,6 +18,7 @@ func setupPersistence() {
 	createTable()
 }
 
+// 创建消息表
 func createTable() {
 	createTableSQL := `CREATE TABLE IF NOT EXISTS messages (
 		"id" string NOT NULL PRIMARY KEY,
@@ -39,6 +40,7 @@ func createTable() {
 	}
 }
 
+// 保存消息
 func addMessage(message models.ChatEvent) {
 	tx, err := _db.Begin()
 	if err != nil {
@@ -61,6 +63,8 @@ func addMessage(message models.ChatEvent) {
 	}
 }
 
+// 获取历史消息
+// 最近一天的
 func getChatHistory(filtered bool) []models.ChatEvent {
 	history := make([]models.ChatEvent, 0)
 
@@ -109,6 +113,7 @@ func getChatHistory(filtered bool) []models.ChatEvent {
 	return history
 }
 
+// 设置消息的可见性
 func saveMessageVisibility(messageIDs []string, visible bool) error {
 	tx, err := _db.Begin()
 	if err != nil {
@@ -143,6 +148,7 @@ func saveMessageVisibility(messageIDs []string, visible bool) error {
 	return nil
 }
 
+// 根据 id 获取消息
 func getMessageById(messageID string) (models.ChatEvent, error) {
 	var query = "SELECT * FROM messages WHERE id = ?"
 	row := _db.QueryRow(query, messageID)

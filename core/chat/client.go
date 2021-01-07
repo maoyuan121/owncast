@@ -21,21 +21,21 @@ const channelBufSize = 100
 
 //Client represents a chat client.
 type Client struct {
-	ConnectedAt  time.Time
-	MessageCount int
-	UserAgent    string
-	IPAddress    string
-	Username     *string
+	ConnectedAt  time.Time         // 连接时间
+	MessageCount int               // 消息数量
+	UserAgent    string            // 浏览器 useragent
+	IPAddress    string            // ip 地址
+	Username     *string           // yon过户名
 	ClientID     string            // How we identify unique viewers when counting viewer counts.
 	Geo          *geoip.GeoDetails `json:"geo"`
 
-	socketID              string // How we identify a single websocket client.
-	ws                    *websocket.Conn
-	ch                    chan models.ChatEvent
-	pingch                chan models.PingMessage
-	usernameChangeChannel chan models.NameChangeEvent
+	socketID              string                      // How we identify a single websocket client.
+	ws                    *websocket.Conn             // websocket 连接
+	ch                    chan models.ChatEvent       // 消息通道
+	pingch                chan models.PingMessage     // ping 通道
+	usernameChangeChannel chan models.NameChangeEvent // 修改用户名通道
 
-	doneCh chan bool
+	doneCh chan bool // 断线通道？
 
 	rateLimiter *rate.Limiter
 }
@@ -64,11 +64,12 @@ func NewClient(ws *websocket.Conn) *Client {
 	socketID, _ := shortid.Generate()
 	clientID := socketID
 
-	rateLimiter := rate.NewLimiter(0.6, 5)
+	rateLimiter := rate.NewLimiter(0.6, 5) //  1 秒产生 0.6 个令牌，令牌桶的大小为 5（桶中初始就有 5 个令牌）。有令牌才能发消息
 
 	return &Client{time.Now(), 0, userAgent, ipAddress, nil, clientID, nil, socketID, ws, ch, pingch, usernameChangeChannel, doneCh, rateLimiter}
 }
 
+// 将消息写到 client 的消息通道
 func (c *Client) write(msg models.ChatEvent) {
 	select {
 	case c.ch <- msg:
@@ -80,11 +81,11 @@ func (c *Client) write(msg models.ChatEvent) {
 
 // Listen Write and Read request via channel.
 func (c *Client) listen() {
-	go c.listenWrite()
-	c.listenRead()
+	go c.listenWrite() // 把消息从 client 的通道写到 client 的 websocket 连接去
+	c.listenRead()     // 从 client 的 websocket 连接读消息并发送给 server 的所有 client
 }
 
-// Listen write request via channel.
+// 把消息从 client 的通道写到 client 的 websocket 连接去
 func (c *Client) listenWrite() {
 	for {
 		select {
@@ -119,6 +120,7 @@ func (c *Client) handleClientSocketError(err error) {
 	_server.removeClient(c)
 }
 
+// 检查是否限流
 func (c *Client) passesRateLimit() bool {
 	if !c.rateLimiter.Allow() {
 		log.Warnln("Client", c.ClientID, "has exceeded the messaging rate limiting thresholds.")
@@ -128,7 +130,7 @@ func (c *Client) passesRateLimit() bool {
 	return true
 }
 
-// Listen read request via channel.
+// 从 client 的 websocket 连接读消息并发送给 server 的所有 client
 func (c *Client) listenRead() {
 	for {
 		select {

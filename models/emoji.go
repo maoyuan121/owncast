@@ -1,7 +1,7 @@
 package models
 
-// CustomEmoji represents an image that can be used in chat as a custom emoji.
+// 聊天的 Emoji
 type CustomEmoji struct {
-	Name  string `json:"name"`
-	Emoji string `json:"emoji"`
+	Name  string `json:"name"`  // 文件名
+	Emoji string `json:"emoji"` // 文件路径
 }

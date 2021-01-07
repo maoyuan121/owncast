@@ -10,9 +10,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Max number of metrics we want to keep.
+// 最大收集多少个度量指标
 const maxCollectionValues = 500
 
+// 收集 cpu 度量指标
+// 如果超过最大收集数，那么删除最老的一个度量指标
 func collectCPUUtilization() {
 	if len(Metrics.CPUUtilizations) > maxCollectionValues {
 		Metrics.CPUUtilizations = Metrics.CPUUtilizations[1:]
@@ -28,6 +30,8 @@ func collectCPUUtilization() {
 	Metrics.CPUUtilizations = append(Metrics.CPUUtilizations, metricValue)
 }
 
+// 收集内存度量指标
+// 如果超过最大收集数，那么删除最老的一个度量指标
 func collectRAMUtilization() {
 	if len(Metrics.RAMUtilizations) > maxCollectionValues {
 		Metrics.RAMUtilizations = Metrics.RAMUtilizations[1:]
@@ -38,6 +42,8 @@ func collectRAMUtilization() {
 	Metrics.RAMUtilizations = append(Metrics.RAMUtilizations, metricValue)
 }
 
+// 收集硬盘度量指标
+// 如果超过最大收集数，那么删除最老的一个度量指标
 func collectDiskUtilization() {
 	path := "./"
 	diskUse, _ := disk.Usage(path)
