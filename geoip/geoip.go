@@ -22,8 +22,7 @@ type GeoDetails struct {
 	TimeZone    string `json:"timeZone"`    // 时区
 }
 
-// GetGeoFromIP returns geo details associated with an IP address if we
-// have previously fetched it.
+// 从缓存中获取 ip 对应的 geo 信息
 func GetGeoFromIP(ip string) *GeoDetails {
 	if cachedGeoDetails, ok := _geoIPCache[ip]; ok {
 		return &cachedGeoDetails
@@ -40,7 +39,8 @@ func GetGeoFromIP(ip string) *GeoDetails {
 	return nil
 }
 
-// FetchGeoForIP makes an API call to get geo details for an IP address.
+// 获取 ip 的 geo 信息写到缓存
+// 先从缓存中找有的话直接返回，找不到才从数据库中找，并写回到缓存
 func FetchGeoForIP(ip string) {
 	// If GeoIP has been disabled then don't try to access it.
 	if !_enabled {
